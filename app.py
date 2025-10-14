@@ -19,14 +19,14 @@ load_dotenv()
 jwt = JWTManager()
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///site.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Expiraciones
-access_minutes = int(os.getenv('ACCESS_TOKEN_EXPIRES', 15))
-refresh_days = int(os.getenv('REFRESH_TOKEN_EXPIRES_DAYS', 7))
+access_minutes = int(os.getenv('ACCESS_TOKEN_EXPIRES'))
+refresh_days = int(os.getenv('REFRESH_TOKEN_EXPIRES_DAYS'))
 
-app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY', 'super-secret')  # Cambia esto en producción
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=access_minutes)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=refresh_days)
 
@@ -34,8 +34,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 jwt.init_app(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-with app.app_context():
-    db.create_all()
+
 
 # --------------------------
 # Validaciones y utilidades
